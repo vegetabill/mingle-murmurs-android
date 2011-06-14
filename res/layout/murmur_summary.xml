@@ -1,38 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:stretchColumns="1">
-    <TableRow>
-        <ImageView
-        	android:src="@drawable/icon"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-	       	android:id="@+id/icon" android:layout_gravity="left"/>
-    	<TextView
-        	android:id="@+id/author"
-            android:text="author"
-            android:padding="3dip"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:layout_weight="2"
-            android:layout_gravity="left"/>
-        <TextView 
-        	android:layout_width="wrap_content"	
-        	android:layout_height="wrap_content"
-        	android:id="@+id/createdAt"
-        	android:text="12 June 2011"
-        	android:textAppearance="?android:attr/textAppearanceSmall"
-        	android:textColor="#ccc"
-        	android:layout_gravity="right"/>
-    </TableRow>
-    <TableRow>
-    	<TextView
-        	android:id="@+id/body"
-            android:text="murmur contents"
-            android:padding="3dip"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_gravity="right"/>
-    </TableRow>
-</TableLayout>
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:padding="6dip">
+    
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="6dip"
+        
+        android:src="@drawable/icon" />
+
+    <TextView  
+        android:id="@+id/body"
+
+        android:layout_width="fill_parent"
+        android:layout_height="26dip" 
+        
+        android:layout_toRightOf="@id/icon"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        
+        android:singleLine="true"
+        android:ellipsize="marquee"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="murmur body..." />
+    
+    <TextView
+    	android:id="@+id/createdAt" 
+    	android:layout_height="wrap_content"
+    	android:text="(1 minute ago)"
+    	android:textAppearance="?android:attr/textAppearanceSmall"
+    	android:layout_width="wrap_content"
+    	android:layout_above="@+id/body"
+    	android:layout_alignRight="@+id/body"/>
+    	
+
+    <TextView
+    	android:id="@+id/author"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        
+        android:layout_toRightOf="@id/icon"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_above="@id/body"
+        android:layout_alignWithParentIfMissing="true"
+                
+        android:gravity="center_vertical"
+        android:text="author" />
+    
+
+</RelativeLayout>
