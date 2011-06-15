@@ -26,8 +26,7 @@ public class MingleMurmursIndexActivity extends ListActivity {
     ListView listView = getListView();
     listView.setTextFilterEnabled(true);
 
-    Toast
-        .makeText(MingleMurmursIndexActivity.this, "osito", Toast.LENGTH_SHORT);
+    Toast.makeText(MingleMurmursIndexActivity.this, "osito", Toast.LENGTH_SHORT);
 
     getListView().setOnItemClickListener(new OnItemClickListener() {
       public void onItemClick(AdapterView<?> parent, View view, int position,

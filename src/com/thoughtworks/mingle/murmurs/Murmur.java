@@ -32,6 +32,7 @@ public class Murmur {
 
   private static final PrettyTime prettyTime = new PrettyTime();
 
+  public static Map<Integer, Murmur> ID_TO_MURMURS = new HashMap<Integer, Murmur>();
   public static List<Map<String, String>> MURMURS_DATA = new ArrayList<Map<String, String>>();
   private static List<Murmur> TEST_MURMURS = new ArrayList<Murmur>();
   static {
@@ -70,7 +71,9 @@ public class Murmur {
 
     for (Murmur m : TEST_MURMURS) {
       MURMURS_DATA.add(m.toMap());
+      ID_TO_MURMURS.put(m.getId(), m);
     }
+
   }
 
   private final int id;
@@ -112,7 +115,7 @@ public class Murmur {
   public Date getCreatedAt() {
     return createdAt;
   }
-  
+
   public String getCreatedAtFormatted() {
     return prettyTime.format(this.createdAt);
   }
@@ -143,6 +146,6 @@ public class Murmur {
 
   public static Murmur findByUri(Uri data) {
     String[] urlParts = data.toString().split("\\.");
-    return TEST_MURMURS.get(Integer.parseInt(urlParts[0]));
+    return ID_TO_MURMURS.get(Integer.parseInt(urlParts[0]));
   }
 }
