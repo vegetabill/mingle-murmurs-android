@@ -34,7 +34,7 @@ public class Murmur {
 
   public static Map<Integer, Murmur> ID_TO_MURMURS = new HashMap<Integer, Murmur>();
   public static List<Map<String, String>> MURMURS_DATA = new ArrayList<Map<String, String>>();
-  private static List<Murmur> TEST_MURMURS = new ArrayList<Murmur>();
+  public static List<Murmur> TEST_MURMURS = new ArrayList<Murmur>();
   static {
     Calendar cal = Calendar.getInstance();
 
@@ -82,6 +82,10 @@ public class Murmur {
   private final Date createdAt;
   private final String stream;
   private final boolean truncated;
+
+  public static final String[] COLUMN_NAMES = { "_ID", "AUTHOR", "CREATED_AT", "BODY" };
+
+  public static final Uri CONTENT_URI = Uri.parse("content://com.thoughtworks.mingle.murmurs");
 
   public Murmur(int id, String author, String body, Date createdAt,
       String stream, boolean truncated) {
@@ -141,7 +145,7 @@ public class Murmur {
   }
 
   public static Murmur findById(long id) {
-    return TEST_MURMURS.get((int) id);
+    return ID_TO_MURMURS.get(Integer.valueOf((int) id));
   }
 
   public static Murmur findByUri(Uri data) {
