@@ -14,7 +14,7 @@ public class MingleMurmursShowActivity extends Activity {
     setContentView(R.layout.murmur_details);
 
     Intent launchingIntent = getIntent();
-    Murmur murmur = Murmur.findByUri(launchingIntent.getData());
+    Murmur murmur = Murmur.findByUri(launchingIntent.getData().toString());
     TextView author = (TextView) findViewById(R.id.author);
     author.setText(murmur.getAuthor());
     TextView createdAt = (TextView) findViewById(R.id.createdAt);

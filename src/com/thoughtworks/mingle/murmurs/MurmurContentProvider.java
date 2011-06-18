@@ -1,6 +1,5 @@
 package com.thoughtworks.mingle.murmurs;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -13,9 +12,11 @@ import android.net.Uri;
 
 public class MurmurContentProvider extends ContentProvider {
 
+  public static final Uri CONTENT_URI = Uri.parse("content://com.thoughtworks.mingle.murmurs");
+
   public Cursor query(Uri uri, String[] columns, String where_clause, String[] selection, String order_by) {
     MatrixCursor cursor = new MatrixCursor(Murmur.COLUMN_NAMES);
-    List<Murmur> murmurs = new ArrayList<Murmur>(Murmur.TEST_MURMURS);
+    List<Murmur> murmurs = Murmur.loadFromXml();
     Collections.sort(murmurs, new Comparator<Murmur>() {
       public int compare(Murmur m1, Murmur m2) {
         return Integer.valueOf(m2.getId()).compareTo(Integer.valueOf(m1.getId()));

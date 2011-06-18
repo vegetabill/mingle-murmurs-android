@@ -19,7 +19,7 @@ public class MingleMurmursIndexActivity extends ListActivity {
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    Uri murmurs_uri = Murmur.CONTENT_URI;
+    Uri murmurs_uri = MurmurContentProvider.CONTENT_URI;
 
     // Make the query.
     Cursor cursor = managedQuery(murmurs_uri,
@@ -41,7 +41,7 @@ public class MingleMurmursIndexActivity extends ListActivity {
         Log.i("osito", "id: " + id);
         Intent showContent = new Intent(getApplicationContext(),
             MingleMurmursShowActivity.class);
-        showContent.setData(Murmur.findById(id).getUri());
+        showContent.setData(Uri.parse(Murmur.findById(id).getUri()));
         startActivity(showContent);
       }
     });

@@ -1,15 +1,15 @@
 package com.thoughtworks.mingle.murmurs;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import android.net.Uri;
-
 import com.ocpsoft.pretty.time.PrettyTime;
+import com.thoughtworks.mingle.murmurs.Murmur.Stream.Origin;
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.converters.basic.DateConverter;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class Murmur {
   // murmurs resource xml - attributes
@@ -32,69 +32,42 @@ public class Murmur {
 
   private static final PrettyTime prettyTime = new PrettyTime();
 
-  public static Map<Integer, Murmur> ID_TO_MURMURS = new HashMap<Integer, Murmur>();
-  public static List<Map<String, String>> MURMURS_DATA = new ArrayList<Map<String, String>>();
-  public static List<Murmur> TEST_MURMURS = new ArrayList<Murmur>();
-  static {
-    Calendar cal = Calendar.getInstance();
+  private static final Map<Integer, Murmur> CACHE = new HashMap<Integer, Murmur>();
 
-    TEST_MURMURS.add(new Murmur(10, "odessa", "I am tall and skittish", cal
-        .getTime(), "", false));
-    cal.add(Calendar.MINUTE, -5);
-    TEST_MURMURS.add(new Murmur(9, "suds", "Yum rawhide bits", cal.getTime(),
-        "", false));
-    cal.add(Calendar.HOUR, -1);
-    TEST_MURMURS.add(new Murmur(8, "elmer",
-        "Bumble bumble bumble.  I failed out of puppy school", cal.getTime(),
-        "", false));
-    cal.add(Calendar.HOUR, -5);
-    TEST_MURMURS.add(new Murmur(7, "bruno", "", cal.getTime(), "", false));
-    cal.add(Calendar.DATE, -1);
-    TEST_MURMURS.add(new Murmur(6, "rayo", "Grrrr I will kill you!", cal
-        .getTime(), "", false));
-    cal.add(Calendar.DATE, -8);
-    TEST_MURMURS.add(new Murmur(5, "osito", "Prancing around town", cal
-        .getTime(), "", false));
-    cal.add(Calendar.MONTH, -2);
-    TEST_MURMURS.add(new Murmur(4, "oscuro", "*psssssss*", cal.getTime(), "",
-        false));
-    cal.add(Calendar.MONTH, -3);
-    TEST_MURMURS.add(new Murmur(3, "mani", "I see dead people", cal.getTime(),
-        "", false));
-    cal.add(Calendar.YEAR, -1);
-    TEST_MURMURS.add(new Murmur(2, "zorro", "When's lunch?", cal.getTime(), "",
-        false));
-    cal.add(Calendar.YEAR, -3);
-    TEST_MURMURS.add(new Murmur(1, "bella",
-        "Around and around I go.  Where I stop nobody knows", cal.getTime(),
-        "", false));
+  private Integer id;
+  private String body;
+  private Date created_at;
+  private String jabber_user_name;
+  private boolean is_truncated;
+  private Stream stream;
+  private Author author;
 
-    for (Murmur m : TEST_MURMURS) {
-      MURMURS_DATA.add(m.toMap());
-      ID_TO_MURMURS.put(m.getId(), m);
+  /**
+   * Container class to allow the XML doc to be mapped easily
+   */
+  public static class Murmurs {
+
+    private List<Murmur> murmurs;
+
+    public List<Murmur> getMurmurs() {
+      return murmurs;
     }
-
   }
 
-  private final int id;
-  private final String author;
-  private final String body;
-  private final Date createdAt;
-  private final String stream;
-  private final boolean truncated;
+  public static class Stream {
+    private String type;
+    private Origin origin;
+
+    public static class Origin {
+      private String url;
+      private Integer number;
+    }
+  }
 
   public static final String[] COLUMN_NAMES = { "_ID", "AUTHOR", "CREATED_AT", "BODY" };
 
-  public static final Uri CONTENT_URI = Uri.parse("content://com.thoughtworks.mingle.murmurs");
-
-  public Murmur(int id, String author, String body, Date createdAt,
-      String stream, boolean truncated) {
-    this.id = id;
-    this.author = author;
-    this.body = body;
-    this.createdAt = createdAt;
-    this.stream = stream;
-    this.truncated = truncated;
+  public static void cache(Murmur murmur) {
+    CACHE.put(murmur.getId(), murmur);
   }
 
   public int getId() {
@@ -102,7 +75,7 @@ public class Murmur {
   }
 
   public String getAuthor() {
-    return author;
+    return author.getName();
   }
 
   public String getShortBody() {
@@ -117,19 +90,15 @@ public class Murmur {
   }
 
   public Date getCreatedAt() {
-    return createdAt;
+    return created_at;
   }
 
   public String getCreatedAtFormatted() {
-    return prettyTime.format(this.createdAt);
+    return prettyTime.format(this.created_at);
   }
 
-  public String getStream() {
-    return stream;
-  }
-
-  public Uri getUri() {
-    return Uri.parse(id + ".murmur");
+  public String getUri() {
+    return id + ".murmur";
   }
 
   public String toString() {
@@ -138,18 +107,94 @@ public class Murmur {
 
   public Map<String, String> toMap() {
     Map<String, String> map = new HashMap<String, String>();
-    map.put("AUTHOR", this.author);
+    map.put("AUTHOR", this.author.getName());
     map.put("BODY", this.body);
-    map.put("CREATED_AT", prettyTime.format(this.createdAt));
+    map.put("CREATED_AT", prettyTime.format(this.created_at));
     return map;
   }
 
   public static Murmur findById(long id) {
-    return ID_TO_MURMURS.get(Integer.valueOf((int) id));
+    Integer _id = Integer.valueOf((int) id);
+    return CACHE.get(_id);
   }
 
-  public static Murmur findByUri(Uri data) {
+  public static Murmur findByUri(String data) {
     String[] urlParts = data.toString().split("\\.");
-    return ID_TO_MURMURS.get(Integer.parseInt(urlParts[0]));
+    return findById(Integer.parseInt(urlParts[0]));
   }
+
+  public static List<Murmur> loadFromXml() {
+    XStream xstream = new XStream(new DomDriver());
+    xstream.addImplicitCollection(Murmurs.class, "murmurs", Murmur.class);
+    xstream.alias("murmurs", Murmurs.class);
+    xstream.alias("murmur", Murmur.class);
+    xstream.alias("author", Author.class);
+    xstream.alias("stream", Stream.class);
+    xstream.alias("origin", Origin.class);
+    xstream.registerLocalConverter(Murmur.class, "created_at",
+        new DateConverter("yyyy-MM-dd'T'HH:mm:ss'Z'", new String[] { "yyyy-MM-dd'T'HH:mm:ssZ" }));
+    Murmurs murmurs = (Murmurs) xstream.fromXML(Murmur.TEST_XML);
+    for (Murmur m : murmurs.getMurmurs()) {
+      cache(m);
+    }
+    return murmurs.getMurmurs();
+  }
+
+  final static String TEST_XML = "<murmurs type=\"array\">\n" +
+      "  <murmur>\n" +
+      "    <id type=\"integer\">3</id>\n" +
+      "    <author url=\"http://localhost:8080/api/v2/users/2.xml\">\n" +
+      "      <id type=\"integer\">2</id>\n" +
+      "      <name>xBilyGoatx</name>\n" +
+      "      <login>bill</login>\n" +
+      "      <email nil=\"true\" />\n" +
+      "      <light type=\"boolean\">false</light>\n" +
+      "      <icon_path>/user/icon/2/bill.JPG</icon_path>\n" +
+      "    </author>\n" +
+      "    <body>\n" +
+      "      I created a patch for this bug but can't push it yet\n" +
+      "    </body>\n" +
+      "    <created_at type=\"datetime\">2011-06-18T05:02:03Z</created_at>\n" +
+      "    <jabber_user_name nil=\"true\" />\n" +
+      "    <is_truncated type=\"boolean\">false</is_truncated>\n" +
+      "    <stream type=\"comment\">\n" +
+      "      <origin url=\"http://localhost:8080/api/v2/projects/bearbot/cards/14.xml\">\n" +
+      "        <number type=\"integer\">14</number>\n" +
+      "      </origin>\n" +
+      "    </stream>\n" +
+      "  </murmur>\n" +
+      "  <murmur>\n" +
+      "    <id type=\"integer\">2</id>\n" +
+      "    <author url=\"http://localhost:8080/api/v2/users/2.xml\">\n" +
+      "      <id type=\"integer\">2</id>\n" +
+      "      <name>xBilyGoatx</name>\n" +
+      "      <login>bill</login>\n" +
+      "      <email nil=\"true\" />\n" +
+      "      <light type=\"boolean\">false</light>\n" +
+      "      <icon_path>/user/icon/2/bill.JPG</icon_path>\n" +
+      "    </author>\n" +
+      "    <body>the build is BROKEN but i am on it</body>\n" +
+      "    <created_at type=\"datetime\">2011-06-18T05:01:42Z</created_at>\n" +
+      "    <jabber_user_name nil=\"true\" />\n" +
+      "    <is_truncated type=\"boolean\">false</is_truncated>\n" +
+      "    <stream type=\"default\"></stream>\n" +
+      "  </murmur>\n" +
+      "  <murmur>\n" +
+      "    <id type=\"integer\">1</id>\n" +
+      "    <author url=\"http://localhost:8080/api/v2/users/1.xml\">\n" +
+      "      <id type=\"integer\">1</id>\n" +
+      "      <name>Osito H. Bonito</name>\n" +
+      "      <login>admin</login>\n" +
+      "      <email nil=\"true\" />\n" +
+      "      <light type=\"boolean\">false</light>\n" +
+      "      <icon_path>/user/icon/1/beary.JPG</icon_path>\n" +
+      "    </author>\n" +
+      "    <body>woof!</body>\n" +
+      "    <created_at type=\"datetime\">2011-06-18T04:56:56Z</created_at>\n" +
+      "    <jabber_user_name nil=\"true\" />\n" +
+      "    <is_truncated type=\"boolean\">false</is_truncated>\n" +
+      "    <stream type=\"default\"></stream>\n" +
+      "  </murmur>\n" +
+      "</murmurs>";
+
 }
