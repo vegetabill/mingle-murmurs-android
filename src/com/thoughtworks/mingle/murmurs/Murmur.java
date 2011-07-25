@@ -1,5 +1,6 @@
 package com.thoughtworks.mingle.murmurs;
 
+import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,6 +13,9 @@ import com.thoughtworks.xstream.converters.basic.DateConverter;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class Murmur {
+  private static final DateConverter DATE_CONVERTER = new DateConverter("yyyy-MM-dd'T'HH:mm:ss'Z'",
+      new String[] { "yyyy-MM-dd'T'HH:mm:ssZ" });
+
   // murmurs resource xml - attributes
   // id: Integer; read only, the system generated id for a murmur. This id is
   // globally unique.
@@ -123,7 +127,7 @@ public class Murmur {
     return findById(Integer.parseInt(urlParts[0]));
   }
 
-  public static List<Murmur> loadFromXml() {
+  public static List<Murmur> loadFromXml(InputStream inputStream) {
     XStream xstream = new XStream(new DomDriver());
     xstream.addImplicitCollection(Murmurs.class, "murmurs", Murmur.class);
     xstream.alias("murmurs", Murmurs.class);
@@ -132,8 +136,10 @@ public class Murmur {
     xstream.alias("stream", Stream.class);
     xstream.alias("origin", Origin.class);
     xstream.registerLocalConverter(Murmur.class, "created_at",
-        new DateConverter("yyyy-MM-dd'T'HH:mm:ss'Z'", new String[] { "yyyy-MM-dd'T'HH:mm:ssZ" }));
-    Murmurs murmurs = (Murmurs) xstream.fromXML(Murmur.TEST_XML);
+        DATE_CONVERTER);
+    xstream.registerLocalConverter(Author.class, "last_login_at",
+        DATE_CONVERTER);
+    Murmurs murmurs = (Murmurs) xstream.fromXML(inputStream);
     for (Murmur m : murmurs.getMurmurs()) {
       cache(m);
     }
