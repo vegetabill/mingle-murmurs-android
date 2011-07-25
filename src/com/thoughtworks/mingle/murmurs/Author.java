@@ -21,4 +21,8 @@ public class Author {
     return name;
   }
 
+  public String getIconPath() {
+    return icon_path;
+  }
+
 }

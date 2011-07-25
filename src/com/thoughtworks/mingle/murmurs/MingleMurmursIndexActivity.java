@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import com.thoughtworks.mingle.R;
@@ -21,7 +20,6 @@ public class MingleMurmursIndexActivity extends ListActivity {
 
     Uri murmurs_uri = MurmurContentProvider.CONTENT_URI;
 
-    // Make the query.
     Cursor cursor = managedQuery(murmurs_uri,
         null, // Which columns to return
         null, // Which rows to return (all rows)
@@ -32,8 +30,6 @@ public class MingleMurmursIndexActivity extends ListActivity {
         cursor, Murmur.COLUMN_NAMES,
         new int[] { 0, R.id.author, R.id.createdAt, R.id.body });
     setListAdapter(adapter);
-    ListView listView = getListView();
-    listView.setTextFilterEnabled(true);
 
     getListView().setOnItemClickListener(new OnItemClickListener() {
       public void onItemClick(AdapterView<?> parent, View view, int position,

@@ -72,6 +72,7 @@ public class Murmur {
 
   public static void cache(Murmur murmur) {
     CACHE.put(murmur.getId(), murmur);
+    IconCache.cacheAuthor(murmur.author);
   }
 
   public int getId() {

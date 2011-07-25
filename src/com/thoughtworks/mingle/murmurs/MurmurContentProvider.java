@@ -16,15 +16,13 @@ import com.dephillipsdesign.http.HttpClientUtil;
 
 public class MurmurContentProvider extends ContentProvider {
 
-  private static final boolean EMULATOR = true;
   public static final Uri CONTENT_URI = Uri.parse("content://com.thoughtworks.mingle.murmurs");
 
   private InputStream openRemoteUri() {
     try {
-      String host = EMULATOR ? "10.0.2.2" : "192.168.1.66";
-      String uri = "http://" + host + ":8080/api/v2/projects/bearbot/murmurs.xml";
-      Log.i("murmurs", uri);
-      return HttpClientUtil.openInputStream(uri, "admin", "p");
+      String uri = Settings.getProjectPath() + "/murmurs.xml";
+      Log.i(MurmurContentProvider.class.getName(), uri);
+      return HttpClientUtil.openInputStream(uri);
     } catch (Exception e) {
       throw new RuntimeException(e);
     }

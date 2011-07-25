@@ -27,13 +27,22 @@ import org.apache.http.protocol.HttpContext;
 
 import android.util.Log;
 
+import com.thoughtworks.mingle.murmurs.Settings;
+
 public class HttpClientUtil {
 
-  public static InputStream openInputStream(String url, String username, String password) {
+  private static final boolean DEBUG = false;
+
+  public static InputStream openInputStream(String url) {
+    return openInputStream(url, Settings.getUsername(), Settings.getPassword());
+  }
+
+  private static InputStream openInputStream(String url, String username, String password) {
     try {
+      URI uri = URI.create(url);
       DefaultHttpClient client = new DefaultHttpClient();
       client.getCredentialsProvider().setCredentials(
-          new AuthScope(null, -1),
+          new AuthScope(uri.getHost(), uri.getPort()),
           new UsernamePasswordCredentials(username, password));
 
       HttpRequestInterceptor preemptiveAuth = new HttpRequestInterceptor() {
@@ -59,14 +68,18 @@ public class HttpClientUtil {
 
       HttpResponse response = client.execute(request);
       InputStream is = response.getEntity().getContent();
-      BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-      String s = null;
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      while ((s = reader.readLine()) != null) {
-        Log.d(HttpClientUtil.class.getCanonicalName(), s);
-        baos.write(s.getBytes());
+      if (DEBUG) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        String s = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        while ((s = reader.readLine()) != null) {
+          Log.d(HttpClientUtil.class.getCanonicalName(), s);
+          baos.write(s.getBytes());
+        }
+        return new ByteArrayInputStream(baos.toByteArray());
+      } else {
+        return is;
       }
-      return new ByteArrayInputStream(baos.toByteArray());
     } catch (Exception e) {
       throw new RuntimeException(e);
     }
