@@ -30,4 +30,12 @@ public class Settings {
     return Environment.getExternalStorageDirectory().getAbsolutePath();
   }
 
+  public static int getMaxIconCacheSize() {
+    return 16 * 1024;
+  }
+
+  public static int getMaxIconCacheAgeInHours() {
+    return 24;
+  }
+
 }

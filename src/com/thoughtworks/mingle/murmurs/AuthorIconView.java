@@ -11,13 +11,14 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.dephillipsdesign.io.IOUtils;
 import com.thoughtworks.mingle.murmurs.IconCache.IconViewDownloader;
 
 public class AuthorIconView extends ImageView {
+
+  private static final int HEIGHT = 48, WIDTH = 48;
 
   public AuthorIconView(Context context) {
     super(context);
@@ -32,21 +33,25 @@ public class AuthorIconView extends ImageView {
   }
 
   public void setImageURI(final Uri uri) {
-    Log.d(AuthorIconView.class.getName(), "Setting uri: " + uri);
     IconViewDownloader iconDownloader = new IconViewDownloader(new Handler() {
       public void handleMessage(Message msg) {
-        Log.d(AuthorIconView.class.getName(), "Setting image bitmap from: " + IconCache.getCachedIconPath(uri));
         String localImagePath = IconCache.getCachedIconPath(uri);
         InputStream inputStream = IOUtils.openInputStream(localImagePath);
         ByteArrayOutputStream tempOutputStream = new ByteArrayOutputStream();
         IOUtils.copyStream(inputStream, tempOutputStream);
         byte[] imageData = tempOutputStream.toByteArray();
-        Log.d(AuthorIconView.class.getName(), "Image file " + localImagePath + " size: " + imageData.length + " bytes");
-
-        Bitmap bitmap = BitmapFactory.decodeStream(new ByteArrayInputStream(imageData));
+        Bitmap bitmap = BitmapFactory.decodeStream(new ByteArrayInputStream(imageData), null, getDecodingOptions());
         setImageBitmap(bitmap);
       }
     });
     iconDownloader.execute(uri.toString());
   }
+
+  private static BitmapFactory.Options getDecodingOptions() {
+    BitmapFactory.Options opts = new BitmapFactory.Options();
+    opts.outHeight = HEIGHT;
+    opts.outWidth = WIDTH;
+    return opts;
+  }
+
 }
