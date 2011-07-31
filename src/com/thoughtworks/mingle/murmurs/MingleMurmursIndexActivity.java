@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -34,7 +33,6 @@ public class MingleMurmursIndexActivity extends ListActivity {
     getListView().setOnItemClickListener(new OnItemClickListener() {
       public void onItemClick(AdapterView<?> parent, View view, int position,
           long id) {
-        Log.i("osito", "id: " + id);
         Intent showContent = new Intent(getApplicationContext(),
             MingleMurmursShowActivity.class);
         showContent.setData(Uri.parse(Murmur.findById(id).getUri()));

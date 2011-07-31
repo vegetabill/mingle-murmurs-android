@@ -82,7 +82,7 @@ public class HttpClientUtil {
         return is;
       }
     } catch (Exception e) {
-      throw new RuntimeException(e);
+      throw new RuntimeException("Error loading resource " + url, e);
     }
   }
 }

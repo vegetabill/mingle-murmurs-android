@@ -31,7 +31,7 @@ public class MurmurContentProvider extends ContentProvider {
   public Cursor query(Uri uri, String[] columns, String where_clause, String[] selection, String order_by) {
     MatrixCursor cursor = new MatrixCursor(Murmur.COLUMN_NAMES);
 
-    List<Murmur> murmurs = Murmur.loadFromXml(openRemoteUri());
+    List<Murmur> murmurs = new MurmursLoader().loadFromXml(openRemoteUri());
     Collections.sort(murmurs, new Comparator<Murmur>() {
       public int compare(Murmur m1, Murmur m2) {
         return Integer.valueOf(m2.getId()).compareTo(Integer.valueOf(m1.getId()));

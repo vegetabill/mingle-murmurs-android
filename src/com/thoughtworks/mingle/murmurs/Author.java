@@ -26,7 +26,7 @@ public class Author {
   }
 
   public String getIconPathUri() {
-    return IconCache.getIconPath(name);
+    return IconCache.getRemoteIconPath(name);
   }
 
 }
