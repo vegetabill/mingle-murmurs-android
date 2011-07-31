@@ -68,7 +68,7 @@ public class Murmur {
     }
   }
 
-  public static final String[] COLUMN_NAMES = { "_ID", "AUTHOR", "CREATED_AT", "BODY" };
+  public static final String[] COLUMN_NAMES = { "_ID", "AUTHOR", "CREATED_AT", "BODY", "ICON_PATH" };
 
   public static void cache(Murmur murmur) {
     CACHE.put(murmur.getId(), murmur);
@@ -104,6 +104,10 @@ public class Murmur {
 
   public String getUri() {
     return id + ".murmur";
+  }
+
+  public String getIconPathUri() {
+    return author.getIconPathUri();
   }
 
   public String toString() {

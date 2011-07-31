@@ -1,5 +1,7 @@
 package com.thoughtworks.mingle.murmurs;
 
+import android.os.Environment;
+
 public class Settings {
 
   private static final boolean EMULATOR = true;
@@ -22,6 +24,10 @@ public class Settings {
 
   public static int getPort() {
     return 8080;
+  }
+
+  public static String getLocalStoragePath() {
+    return Environment.getExternalStorageDirectory().getAbsolutePath();
   }
 
 }

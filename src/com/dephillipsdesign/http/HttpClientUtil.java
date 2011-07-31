@@ -1,5 +1,6 @@
 package com.dephillipsdesign.http;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -67,9 +68,9 @@ public class HttpClientUtil {
       client.addRequestInterceptor(preemptiveAuth, 0);
 
       HttpResponse response = client.execute(request);
-      InputStream is = response.getEntity().getContent();
+      InputStream is = new BufferedInputStream(response.getEntity().getContent(), 4048);
       if (DEBUG) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is), 8092);
         String s = null;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         while ((s = reader.readLine()) != null) {
