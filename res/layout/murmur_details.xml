@@ -12,10 +12,13 @@
 		>
 		
 		<LinearLayout android:id="@+id/linearLayout1" android:layout_width="wrap_content" android:layout_height="wrap_content">
-		<ImageView android:src="@drawable/icon"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:id="@+id/icon" android:layout_weight=".2"></ImageView>
+		<com.thoughtworks.mingle.murmurs.AuthorIconView
+			android:layout_width="48px"
+        	android:layout_height="48px"
+        	android:layout_marginRight="6dip"
+			android:id="@+id/icon"
+			android:src="@drawable/default_user_avatar"
+			/>
 
 		<TextView
 			android:layout_width="fill_parent"

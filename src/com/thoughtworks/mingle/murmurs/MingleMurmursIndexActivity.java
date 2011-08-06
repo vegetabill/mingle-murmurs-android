@@ -26,7 +26,7 @@ public class MingleMurmursIndexActivity extends ListActivity {
         null);
 
     SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.murmur_summary,
-        cursor, Murmur.COLUMN_NAMES,
+        cursor, Murmur.SUMMARY_COLUMN_NAMES,
         new int[] { 0, R.id.tagline, R.id.body, R.id.icon });
     setListAdapter(adapter);
 

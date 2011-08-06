@@ -39,21 +39,22 @@ public class MurmurContentProvider extends ContentProvider {
   }
   
   private Cursor findMurmur(int id) {
-    MatrixCursor cursor = new MatrixCursor(Murmur.COLUMN_NAMES);
+    MatrixCursor cursor = new MatrixCursor(Murmur.DETAIL_COLUMN_NAMES);
     Murmur murmur = new MurmursLoader().loadOneFromXml(openRemoteGetUri(id));
-    return addRows(cursor, Collections.singletonList(murmur));
+    cursor.addRow(new Object[] { murmur.getId(), murmur.getAuthor(), murmur.getCreatedAtFormatted(), murmur.getBody(), murmur.getIconPathUri() });
+    return cursor;
   }
   
   private Cursor addRows(MatrixCursor cursor, List<Murmur> murmurs) {
     Log.d(MurmurContentProvider.class.getName(), "Adding " + murmurs.size() + " to cursor");
     for (Murmur m : murmurs) {
-      cursor.addRow(new Object[] { m.getId(), m.getTagline(), m.getBody(), m.getIconPathUri() });
+      cursor.addRow(new Object[] { m.getId(), m.getTagline(), m.getShortBody(), m.getIconPathUri() });
     }
     return cursor;
   }
 
   private Cursor queryRecentMurmurs() {
-    MatrixCursor cursor = new MatrixCursor(Murmur.COLUMN_NAMES);
+    MatrixCursor cursor = new MatrixCursor(Murmur.SUMMARY_COLUMN_NAMES);
     List<Murmur> murmurs = new MurmursLoader().loadMultipleFromXml(openRemoteListUri());
     return addRows(cursor, murmurs);
   }

@@ -44,7 +44,9 @@ public class Murmur {
     }
   }
 
-  public static final String[] COLUMN_NAMES = { "_ID", "TAGLINE", "BODY", "ICON_PATH" };
+  public static final String[] SUMMARY_COLUMN_NAMES = { "_ID", "TAGLINE", "BODY", "ICON_PATH" };
+
+  public static final String[] DETAIL_COLUMN_NAMES = { "_ID", "AUTHOR", "CREATED_AT", "BODY", "ICON_PATH" };
 
   public static void cache(Murmur murmur) {
     IconCache.cacheAuthor(murmur.author);
@@ -93,4 +95,7 @@ public class Murmur {
     return Uri.parse(id + ".murmur");
   }
 
+  public static int getIdFromUri(String uri) {
+    return Integer.parseInt(uri.split("\\.")[0]);
+  }
 }
