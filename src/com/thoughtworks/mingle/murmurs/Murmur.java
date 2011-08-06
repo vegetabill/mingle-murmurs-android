@@ -5,13 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.net.Uri;
+
 import com.ocpsoft.pretty.time.PrettyTime;
 import com.thoughtworks.mingle.murmurs.Murmur.Stream.Origin;
 
 public class Murmur {
-  private static final PrettyTime prettyTime = new PrettyTime();
 
-  private static final Map<Integer, Murmur> CACHE = new HashMap<Integer, Murmur>();
+  private static final PrettyTime prettyTime = new PrettyTime();
 
   private Integer id;
   private String body;
@@ -46,7 +47,6 @@ public class Murmur {
   public static final String[] COLUMN_NAMES = { "_ID", "TAGLINE", "BODY", "ICON_PATH" };
 
   public static void cache(Murmur murmur) {
-    CACHE.put(murmur.getId(), murmur);
     IconCache.cacheAuthor(murmur.author);
   }
 
@@ -77,10 +77,6 @@ public class Murmur {
     return prettyTime.format(this.created_at);
   }
 
-  public String getUri() {
-    return id + ".murmur";
-  }
-
   public String getIconPathUri() {
     return author.getIconPathUri();
   }
@@ -89,18 +85,12 @@ public class Murmur {
     return String.format("%s: %s", this.author, this.body);
   }
 
-  public static Murmur findById(long id) {
-    Integer _id = Integer.valueOf((int) id);
-    return CACHE.get(_id);
-  }
-
-  public static Murmur findByUri(String data) {
-    String[] urlParts = data.toString().split("\\.");
-    return findById(Integer.parseInt(urlParts[0]));
-  }
-
   public String getTagline() {
     return String.format("-%s (%s)", getAuthor(), getCreatedAtFormatted());
+  }
+
+  public static Uri constructUri(long id) {
+    return Uri.parse(id + ".murmur");
   }
 
 }

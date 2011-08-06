@@ -38,11 +38,11 @@ public class MurmurContentProvider extends ContentProvider {
     }
   }
   
-//  private Cursor findMurmur(int id) {
-//    MatrixCursor cursor = new MatrixCursor(Murmur.COLUMN_NAMES);
-//    Murmur murmur = new MurmursLoader().loadOneFromXml(openRemoteGetUri(id));
-//    return addRows(cursor, Collections.singletonList(murmur));
-//  }
+  private Cursor findMurmur(int id) {
+    MatrixCursor cursor = new MatrixCursor(Murmur.COLUMN_NAMES);
+    Murmur murmur = new MurmursLoader().loadOneFromXml(openRemoteGetUri(id));
+    return addRows(cursor, Collections.singletonList(murmur));
+  }
   
   private Cursor addRows(MatrixCursor cursor, List<Murmur> murmurs) {
     Log.d(MurmurContentProvider.class.getName(), "Adding " + murmurs.size() + " to cursor");
@@ -61,8 +61,10 @@ public class MurmurContentProvider extends ContentProvider {
   public Cursor query(Uri uri, String[] columns, String where_clause, String[] selection, String order_by) {
     if (where_clause == null) {
       return queryRecentMurmurs();
+    } else {
+      int id = Integer.parseInt(where_clause.split("=")[1]);
+      return findMurmur(id);
     }
-    return null;
   }
 
   public String getType(Uri uri) {

@@ -35,7 +35,7 @@ public class MingleMurmursIndexActivity extends ListActivity {
           long id) {
         Intent showContent = new Intent(getApplicationContext(),
             MingleMurmursShowActivity.class);
-        showContent.setData(Uri.parse(Murmur.findById(id).getUri()));
+        showContent.setData(Murmur.constructUri(id));
         startActivity(showContent);
       }
     });
