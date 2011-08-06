@@ -76,8 +76,11 @@ public class MurmurContentProvider extends ContentProvider {
     throw new UnsupportedOperationException();
   }
 
-  public Uri insert(Uri arg0, ContentValues arg1) {
-    throw new UnsupportedOperationException();
+  public Uri insert(Uri uri, ContentValues contentValues) {
+    String body = (String) contentValues.get("body");
+    Murmur murmur = new Murmur(body);
+    murmur.saveAsNew();
+    return null;
   }
 
   public int update(Uri arg0, ContentValues arg1, String arg2, String[] arg3) {

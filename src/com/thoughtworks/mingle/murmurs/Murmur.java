@@ -21,6 +21,19 @@ public class Murmur {
   private boolean is_truncated;
   private Stream stream;
   private Author author;
+  
+  /**
+   * For xstream
+   */
+  public Murmur() {}
+  
+  /**
+   * For posting to Mingle
+   * @param body
+   */
+  public Murmur(String body) {
+    this.body = body;
+  }
 
   /**
    * Container class to allow the XML doc to be mapped easily
@@ -97,5 +110,10 @@ public class Murmur {
 
   public static int getIdFromUri(String uri) {
     return Integer.parseInt(uri.split("\\.")[0]);
+  }
+
+  public void saveAsNew() {
+    
+    this.id = 0;
   }
 }
