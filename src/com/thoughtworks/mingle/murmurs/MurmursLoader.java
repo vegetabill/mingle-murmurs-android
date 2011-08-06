@@ -12,11 +12,8 @@ public class MurmursLoader {
 
   private static final DateConverter DATE_CONVERTER = new DateConverter("yyyy-MM-dd'T'HH:mm:ss'Z'",
       new String[] { "yyyy-MM-dd'T'HH:mm:ssZ" });
-
-  public List<Murmur> loadFromXml(InputStream inputStream) {
-    XStream xstream = new XStream(new DomDriver());
-    xstream.addImplicitCollection(Murmur.Murmurs.class, "murmurs", Murmur.class);
-    xstream.alias("murmurs", Murmur.Murmurs.class);
+  
+  private void addCommonAliases(XStream xstream) {
     xstream.alias("murmur", Murmur.class);
     xstream.alias("author", Author.class);
     xstream.alias("stream", Murmur.Stream.class);
@@ -25,6 +22,19 @@ public class MurmursLoader {
         MurmursLoader.DATE_CONVERTER);
     xstream.registerLocalConverter(Author.class, "last_login_at",
         MurmursLoader.DATE_CONVERTER);
+  }
+
+  public Murmur loadOneFromXml(InputStream inputStream) {
+    XStream xstream = new XStream(new DomDriver());
+    addCommonAliases(xstream);
+    return (Murmur) xstream.fromXML(inputStream);
+  }
+  
+  public List<Murmur> loadMultipleFromXml(InputStream inputStream) {
+    XStream xstream = new XStream(new DomDriver());
+    xstream.addImplicitCollection(Murmur.Murmurs.class, "murmurs", Murmur.class);
+    xstream.alias("murmurs", Murmur.Murmurs.class);
+    addCommonAliases(xstream);
     Murmur.Murmurs murmurs = (Murmur.Murmurs) xstream.fromXML(inputStream);
     for (Murmur m : murmurs.getMurmurs()) {
       Murmur.cache(m);

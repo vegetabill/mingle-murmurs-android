@@ -19,7 +19,11 @@ public class Settings {
   }
 
   public static String getProjectPath() {
-    return getMingleHost() + "/api/v2/projects/bearbot";
+    return getMingleHost() + "/api/v2/projects/" + getProjectIdentifier();
+  }
+  
+  public static String getProjectIdentifier() {
+    return "bearbot";
   }
 
   public static int getPort() {
