@@ -1,12 +1,15 @@
 package com.thoughtworks.mingle.murmurs;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import android.net.Uri;
+import android.util.Log;
 
+import com.dephillipsdesign.http.HttpClientUtil;
 import com.ocpsoft.pretty.time.PrettyTime;
 import com.thoughtworks.mingle.murmurs.Murmur.Stream.Origin;
 
@@ -113,7 +116,8 @@ public class Murmur {
   }
 
   public void saveAsNew() {
-    
-    this.id = 0;
+    String postUrl = Settings.getProjectPath() + "/murmurs.xml";
+    String response = HttpClientUtil.postRequest(postUrl, Collections.singletonMap("murmur[body]", getBody()));
+    Log.i(Murmur.class.getName(), "POST Response: " + response);
   }
 }
