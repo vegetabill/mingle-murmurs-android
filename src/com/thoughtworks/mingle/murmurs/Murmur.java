@@ -43,7 +43,7 @@ public class Murmur {
     }
   }
 
-  public static final String[] COLUMN_NAMES = { "_ID", "AUTHOR", "CREATED_AT", "BODY", "ICON_PATH" };
+  public static final String[] COLUMN_NAMES = { "_ID", "TAGLINE", "BODY", "ICON_PATH" };
 
   public static void cache(Murmur murmur) {
     CACHE.put(murmur.getId(), murmur);
@@ -89,14 +89,6 @@ public class Murmur {
     return String.format("%s: %s", this.author, this.body);
   }
 
-  public Map<String, String> toMap() {
-    Map<String, String> map = new HashMap<String, String>();
-    map.put("AUTHOR", this.author.getName());
-    map.put("BODY", this.body);
-    map.put("CREATED_AT", prettyTime.format(this.created_at));
-    return map;
-  }
-
   public static Murmur findById(long id) {
     Integer _id = Integer.valueOf((int) id);
     return CACHE.get(_id);
@@ -105,6 +97,10 @@ public class Murmur {
   public static Murmur findByUri(String data) {
     String[] urlParts = data.toString().split("\\.");
     return findById(Integer.parseInt(urlParts[0]));
+  }
+
+  public String getTagline() {
+    return String.format("-%s (%s)", getAuthor(), getCreatedAtFormatted());
   }
 
 }

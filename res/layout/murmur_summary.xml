@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
+    android:orientation="horizontal"
     android:padding="6dip">
     
     <com.thoughtworks.mingle.murmurs.AuthorIconView
@@ -11,47 +12,28 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
         android:layout_marginRight="6dip"
-        
         android:src="@drawable/default_user_avatar" />
-
-    <TextView  
-        android:id="@+id/body"
-
-        android:layout_width="fill_parent"
-        android:layout_height="26dip" 
         
-        android:layout_toRightOf="@id/icon"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+    <LinearLayout 
+    	android:id="@+id/linearLayout1"
+    	android:orientation="vertical"
+    	android:layout_width="fill_parent" android:layout_height="match_parent">
         
-        android:singleLine="true"
-        android:ellipsize="marquee"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="murmur body..." />
+        <TextView 
+        	android:text="murmur body"
+        	android:id="@+id/body"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"/>
+        
+        <TextView
+        	android:layout_width="wrap_content"
+        	android:text="author (1 min ago)"
+        	android:textAppearance="?android:attr/textAppearanceSmall"
+        	android:layout_height="wrap_content"
+        	android:id="@+id/tagline"/>
     
-    <TextView
-    	android:id="@+id/createdAt" 
-    	android:layout_height="wrap_content"
-    	android:text="(1 minute ago)"
-    	android:textAppearance="?android:attr/textAppearanceSmall"
-    	android:layout_width="wrap_content"
-    	android:layout_above="@+id/body"
-    	android:layout_alignRight="@+id/body"/>
-    	
+    </LinearLayout>
 
-    <TextView
-    	android:id="@+id/author"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
         
-        android:layout_toRightOf="@id/icon"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:layout_above="@id/body"
-        android:layout_alignWithParentIfMissing="true"
-                
-        android:gravity="center_vertical"
-        android:text="author" />
-    
 
 </LinearLayout>

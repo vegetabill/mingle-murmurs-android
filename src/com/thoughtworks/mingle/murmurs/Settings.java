@@ -23,7 +23,7 @@ public class Settings {
   }
 
   public static int getPort() {
-    return 8080;
+    return 4001;
   }
 
   public static String getLocalStoragePath() {

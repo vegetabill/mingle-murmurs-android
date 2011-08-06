@@ -39,7 +39,7 @@ public class MurmurContentProvider extends ContentProvider {
     });
     for (Murmur m : murmurs) {
       cursor
-          .addRow(new Object[] { m.getId(), m.getAuthor(), m.getCreatedAtFormatted(), m.getBody(), m.getIconPathUri() });
+          .addRow(new Object[] { m.getId(), m.getTagline(), m.getBody(), m.getIconPathUri() });
     }
 
     return cursor;
