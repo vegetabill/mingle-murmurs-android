@@ -45,7 +45,7 @@ public class HttpClientUtil {
 
   private static final boolean DEBUG = false;
 
-  public static String postRequest(String url, Map<String, String> params) {
+  public static InputStream postRequest(String url, Map<String, String> params) {
     URI uri = URI.create(url);
     Log.d(HttpClientUtil.class.getCanonicalName(), "Posting: " + params + " to " + url);
     DefaultHttpClient client = new DefaultHttpClient();
@@ -65,17 +65,19 @@ public class HttpClientUtil {
     BufferedReader reader = null;
     try{
       HttpResponse response = client.execute(httpPost);
-      reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()), 1024);
-      StringWriter stringWriter = new StringWriter();
-      PrintWriter writer = new PrintWriter(stringWriter);
-      String line = null;
-      while ((line = reader.readLine()) != null) {
-        if (DEBUG) {
+      if (DEBUG) {
+        reader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()), 1024);
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter writer = new PrintWriter(stringWriter);
+        String line = null;
+        while ((line = reader.readLine()) != null) {
           Log.d(HttpClientUtil.class.getCanonicalName(), line);
+          writer.println(line);
         }
-        writer.println(line);
+        return new ByteArrayInputStream(stringWriter.toString().getBytes());
+      } else {
+        return response.getEntity().getContent();
       }
-      return stringWriter.toString();
     } catch (Exception e) {
       throw new RuntimeException(e);
     } finally {

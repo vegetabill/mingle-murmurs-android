@@ -1,5 +1,6 @@
 package com.thoughtworks.mingle.murmurs;
 
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -117,7 +118,14 @@ public class Murmur {
 
   public void saveAsNew() {
     String postUrl = Settings.getProjectPath() + "/murmurs.xml";
-    String response = HttpClientUtil.postRequest(postUrl, Collections.singletonMap("murmur[body]", getBody()));
-    Log.i(Murmur.class.getName(), "POST Response: " + response);
+    InputStream newMurmurXmlStream = HttpClientUtil.postRequest(postUrl, Collections.singletonMap("murmur[body]", getBody()));
+    Murmur newMurmur = new MurmursLoader().loadOneFromXml(newMurmurXmlStream);
+    this.author = newMurmur.author;
+    this.body = newMurmur.body;
+    this.created_at = newMurmur.created_at;
+    this.id = newMurmur.id;
+    this.is_truncated = newMurmur.is_truncated;
+    this.jabber_user_name = newMurmur.jabber_user_name;
+    this.stream = newMurmur.stream;
   }
 }
