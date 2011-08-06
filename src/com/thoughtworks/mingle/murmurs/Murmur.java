@@ -61,8 +61,8 @@ public class Murmur {
   }
 
   public String getShortBody() {
-    if (body.length() > 32) {
-      return body.substring(0, 32);
+    if (body.length() > 128) {
+      return body.substring(0, 128);
     }
     return body;
   }
