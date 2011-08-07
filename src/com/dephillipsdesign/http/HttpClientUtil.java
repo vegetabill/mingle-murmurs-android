@@ -49,7 +49,7 @@ public class HttpClientUtil {
     URI uri = URI.create(url);
     Log.d(HttpClientUtil.class.getCanonicalName(), "Posting: " + params + " to " + url);
     DefaultHttpClient client = new DefaultHttpClient();
-    new BasicAuthRequestInterceptor(client, uri, Settings.getUsername(), Settings.getPassword());
+    new BasicAuthRequestInterceptor(client, uri, Settings.getLogin(), Settings.getPassword());
     
     HttpPost httpPost = new HttpPost(url);
     List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
@@ -89,7 +89,7 @@ public class HttpClientUtil {
   }
   
   public static InputStream openInputStream(String url) {
-    return openInputStream(url, Settings.getUsername(), Settings.getPassword());
+    return openInputStream(url, Settings.getLogin(), Settings.getPassword());
   }
 
   private static InputStream openInputStream(String url, String username, String password) {

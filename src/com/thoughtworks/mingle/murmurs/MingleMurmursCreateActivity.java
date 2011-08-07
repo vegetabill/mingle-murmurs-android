@@ -1,7 +1,6 @@
 package com.thoughtworks.mingle.murmurs;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;

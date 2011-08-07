@@ -56,6 +56,10 @@ public class MingleMurmursIndexActivity extends ListActivity {
       Intent intent = new Intent(this, MingleMurmursCreateActivity.class);
       this.startActivity(intent);
       return true;
+    } else if (item.getTitle().equals("Settings")) {
+      Intent intent = new Intent(this, SettingsActivity.class);
+      this.startActivity(intent);
+      return true;
     }
     return super.onOptionsItemSelected(item);
   }

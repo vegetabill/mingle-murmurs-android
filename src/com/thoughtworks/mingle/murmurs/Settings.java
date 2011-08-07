@@ -1,21 +1,23 @@
 package com.thoughtworks.mingle.murmurs;
 
+import java.net.URI;
+
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Environment;
 
 public class Settings {
 
-  private static final boolean EMULATOR = true;
-
-  public static String getUsername() {
-    return "admin";
+  public static String getLogin() {
+    return getPreferences().getString("login", null);
   }
 
   public static String getPassword() {
-    return "p";
+    return getPreferences().getString("password", null);
   }
 
   public static String getMingleHost() {
-    return "http://" + (EMULATOR ? "10.0.2.2" : "192.168.1.66") + ":" + getPort();
+    return getPreferences().getString("host", null);
   }
 
   public static String getProjectPath() {
@@ -23,23 +25,19 @@ public class Settings {
   }
   
   public static String getProjectIdentifier() {
-    return "bearbot";
+    return getPreferences().getString("projectIdentifier", null);
   }
 
   public static int getPort() {
-    return 4001;
+    return URI.create(getMingleHost()).getPort();
   }
 
   public static String getLocalStoragePath() {
     return Environment.getExternalStorageDirectory().getAbsolutePath();
   }
-
-  public static int getMaxIconCacheSize() {
-    return 16 * 1024;
-  }
-
-  public static int getMaxIconCacheAgeInHours() {
-    return 24;
+  
+  static SharedPreferences getPreferences() {
+    return Application.APPLICATION_CONTEXT.getSharedPreferences(Settings.class.getCanonicalName(), Context.MODE_PRIVATE);
   }
 
 }

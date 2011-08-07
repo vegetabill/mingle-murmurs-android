@@ -118,7 +118,7 @@ public class Murmur {
 
   public void saveAsNew() {
     String postUrl = Settings.getProjectPath() + "/murmurs.xml";
-    InputStream newMurmurXmlStream = HttpClientUtil.postRequest(postUrl, Collections.singletonMap("murmur[body]", getBody()));
+    InputStream newMurmurXmlStream = HttpClientUtil.postRequest(postUrl, Collections.singletonMap("murmur[body]", getBody().trim()));
     Murmur newMurmur = new MurmursLoader().loadOneFromXml(newMurmurXmlStream);
     this.author = newMurmur.author;
     this.body = newMurmur.body;
