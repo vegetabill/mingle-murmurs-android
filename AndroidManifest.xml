@@ -13,6 +13,7 @@
             </intent-filter>
         </activity>
         <activity android:label="@string/app_name" android:name=".murmurs.MingleMurmursShowActivity"></activity>
+        <activity android:label="@string/app_name" android:name=".murmurs.MingleMurmursCreateActivity"></activity>
         <provider android:authorities="com.thoughtworks.mingle.murmurs" android:name=".murmurs.MurmurContentProvider"></provider>		
     </application>
     <uses-permission android:name="android.permission.INTERNET" /> 

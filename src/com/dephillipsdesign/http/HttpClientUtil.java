@@ -43,7 +43,7 @@ import com.thoughtworks.mingle.murmurs.Settings;
 
 public class HttpClientUtil {
 
-  private static final boolean DEBUG = false;
+  private static final boolean DEBUG = true;
 
   public static InputStream postRequest(String url, Map<String, String> params) {
     URI uri = URI.create(url);

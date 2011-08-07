@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -39,6 +41,22 @@ public class MingleMurmursIndexActivity extends ListActivity {
         startActivity(showContent);
       }
     });
-
+  }
+  
+  public boolean onCreateOptionsMenu(Menu menu) {
+    menu.add("Refresh");
+    menu.add("Post New Murmur");
+    menu.add("Settings");
+    return super.onCreateOptionsMenu(menu);
+  }
+  
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    if (item.getTitle().equals("Post New Murmur")) {
+      Intent intent = new Intent(this, MingleMurmursCreateActivity.class);
+      this.startActivity(intent);
+      return true;
+    }
+    return super.onOptionsItemSelected(item);
   }
 }
