@@ -9,6 +9,8 @@ import com.thoughtworks.xstream.converters.basic.DateConverter;
 import com.thoughtworks.xstream.io.xml.DomDriver;
 
 public class MurmursLoader {
+  
+  public static class NoMoreMurmursException extends RuntimeException { }
 
   private static final DateConverter DATE_CONVERTER = new DateConverter("yyyy-MM-dd'T'HH:mm:ss'Z'",
       new String[] { "yyyy-MM-dd'T'HH:mm:ssZ" });
@@ -36,6 +38,9 @@ public class MurmursLoader {
     xstream.alias("murmurs", Murmur.Murmurs.class);
     addCommonAliases(xstream);
     Murmur.Murmurs murmurs = (Murmur.Murmurs) xstream.fromXML(inputStream);
+    if (murmurs == null) {
+      throw new NoMoreMurmursException();
+    }
     for (Murmur m : murmurs.getMurmurs()) {
       Murmur.cache(m);
     }

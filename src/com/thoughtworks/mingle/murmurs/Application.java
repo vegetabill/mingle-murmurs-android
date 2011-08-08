@@ -13,7 +13,7 @@ public class Application extends android.app.Application {
     
     //Defaults for testing - TODO: remove
     Editor editor = Settings.getPreferences().edit();
-    editor.putString("login", "admin");
+    editor.putString("login", "bill");
     editor.putString("password", "p");
     editor.putString("host", "http://10.0.2.2:4001");
     editor.putString("projectIdentifier", "bearbot");

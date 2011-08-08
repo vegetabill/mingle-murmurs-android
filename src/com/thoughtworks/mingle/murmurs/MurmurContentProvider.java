@@ -12,20 +12,22 @@ import android.database.MatrixCursor;
 import android.net.Uri;
 import android.util.Log;
 
+import com.dephillipsdesign.android.PaginatedHttpDataCursor;
+import com.dephillipsdesign.android.PaginatedHttpDataCursor.PaginatedDataRetriever;
 import com.dephillipsdesign.http.HttpClientUtil;
 
-public class MurmurContentProvider extends ContentProvider {
+public class MurmurContentProvider extends ContentProvider implements PaginatedDataRetriever {
 
   public static final Uri CONTENT_URI = Uri.parse("content://com.thoughtworks.mingle.murmurs");
 
-  private InputStream openRemoteListUri() {
+  private InputStream openRemoteListUri(int pageNumber) {
     try {
-      String uri = Settings.getProjectPath() + "/murmurs.xml";
+      String uri = Settings.getProjectPath() + "/murmurs.xml" + "?page=" + pageNumber;
       Log.i(MurmurContentProvider.class.getName(), uri);
       return HttpClientUtil.openInputStream(uri);
     } catch (Exception e) {
       throw new RuntimeException(e);
-    }
+    }    
   }
   
   private InputStream openRemoteGetUri(int id) {
@@ -45,23 +47,23 @@ public class MurmurContentProvider extends ContentProvider {
     return cursor;
   }
   
-  private Cursor addRows(MatrixCursor cursor, List<Murmur> murmurs) {
+  private void addRows(MatrixCursor cursor, List<Murmur> murmurs) {
     Log.d(MurmurContentProvider.class.getName(), "Adding " + murmurs.size() + " to cursor");
     for (Murmur m : murmurs) {
       cursor.addRow(new Object[] { m.getId(), m.getTagline(), m.getShortBody(), m.getIconPathUri() });
     }
-    return cursor;
   }
 
-  private Cursor queryRecentMurmurs() {
-    MatrixCursor cursor = new MatrixCursor(Murmur.SUMMARY_COLUMN_NAMES);
-    List<Murmur> murmurs = new MurmursLoader().loadMultipleFromXml(openRemoteListUri());
-    return addRows(cursor, murmurs);
+  private MatrixCursor queryRecentMurmurs() {
+    final MatrixCursor cursor = new MatrixCursor(Murmur.SUMMARY_COLUMN_NAMES);
+    final List<Murmur> murmurs = new MurmursLoader().loadMultipleFromXml(openRemoteListUri(1));
+    addRows(cursor, murmurs);
+    return cursor;
   }
   
   public Cursor query(Uri uri, String[] columns, String where_clause, String[] selection, String order_by) {
     if (where_clause == null) {
-      return queryRecentMurmurs();
+      return PaginatedHttpDataCursor.create(this);
     } else {
       int id = Integer.parseInt(where_clause.split("=")[1]);
       return findMurmur(id);
@@ -89,6 +91,15 @@ public class MurmurContentProvider extends ContentProvider {
 
   public boolean onCreate() {
     return true;
+  }
+
+  public MatrixCursor populateInitialPage() {
+    return queryRecentMurmurs();
+  }
+
+  public void addPageToCursor(int pageNumber, MatrixCursor cursor) {
+    List<Murmur> murmurs = new MurmursLoader().loadMultipleFromXml(openRemoteListUri(pageNumber));
+    addRows(cursor, murmurs);
   }
 
 }
