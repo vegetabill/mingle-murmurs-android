@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.http.Header;
 import org.apache.http.HttpException;
 import org.apache.http.HttpHost;
 import org.apache.http.HttpRequest;
@@ -98,22 +99,25 @@ public class HttpClientUtil {
       DefaultHttpClient client = new DefaultHttpClient();
       new BasicAuthRequestInterceptor(client, uri, username, password);
       HttpGet request = new HttpGet(new URI(url));
-      
-
       HttpResponse response = client.execute(request);
+      Header[] locationHeaders = response.getHeaders("location");
+      if (locationHeaders.length > 0) {
+    	  Log.d(HttpClientUtil.class.getCanonicalName(), "Headers: " + locationHeaders);
+      }
+
       InputStream is = new BufferedInputStream(response.getEntity().getContent(), 4048);
-//      if (DEBUG) {
-//        BufferedReader reader = new BufferedReader(new InputStreamReader(is), 8092);
-//        String s = null;
-//        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//        while ((s = reader.readLine()) != null) {
-//          Log.d(HttpClientUtil.class.getCanonicalName(), s);
-//          baos.write(s.getBytes());
-//        }
-//        return new ByteArrayInputStream(baos.toByteArray());
-//      } else {
+      if (DEBUG) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is), 8092);
+        String s = null;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        while ((s = reader.readLine()) != null) {
+          Log.d(HttpClientUtil.class.getCanonicalName(), s);
+          baos.write(s.getBytes());
+        }
+        return new ByteArrayInputStream(baos.toByteArray());
+      } else {
         return is;
-//      }
+      }
     } catch (Exception e) {
       throw new RuntimeException("Error loading resource " + url, e);
     }

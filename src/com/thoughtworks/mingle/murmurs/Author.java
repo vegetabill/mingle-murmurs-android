@@ -11,6 +11,7 @@ public class Author {
   private String email;
   private boolean light;
   private String icon_path;
+  private String icon_url;
   private Date last_login_at;
   private boolean activated;
   private boolean admin;
@@ -19,6 +20,10 @@ public class Author {
 
   public String getName() {
     return name;
+  }
+  
+  public String getIconUrl() {
+	  return icon_url;	  	
   }
 
   public String getIconPath() {

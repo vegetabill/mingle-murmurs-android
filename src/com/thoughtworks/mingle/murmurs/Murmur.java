@@ -97,7 +97,7 @@ public class Murmur {
   }
 
   public String getIconPathUri() {
-    return author.getIconPathUri();
+    return author.getIconUrl();
   }
 
   public String toString() {

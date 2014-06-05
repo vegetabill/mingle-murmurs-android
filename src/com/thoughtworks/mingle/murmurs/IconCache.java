@@ -51,8 +51,7 @@ public class IconCache {
   private static void storeIcon(String iconPath) {
     synchronized (remotePathToLocalPath) {
       if (!remotePathToLocalPath.containsKey(iconPath)) {
-        String uri = Settings.getMingleHost() + iconPath;
-        InputStream stream = HttpClientUtil.openInputStream(uri);
+        InputStream stream = HttpClientUtil.openInputStream(iconPath);
         String[] pathSegments = iconPath.split("/");
         String relativePath = pathSegments[pathSegments.length - 1];
         File tempFile = new File(getTempFolder(), relativePath);
